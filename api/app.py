@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from api.database import db_connection, insert_into_table_sport, update_in_table_sport, get_data_sport, sport_deactivation, insert_into_event, get_data_event, event_deactivation
+from api.database import db_connection, insert_into_table_sport, update_in_table_sport, get_data_sport, sport_deactivation, insert_into_event, get_data_event, event_deactivation, insert_into_selection, update_in_table_selection, get_data_selection, selection_deactivation
 from datetime import datetime
 from app_helper.helper_class import Sport, Event, Selection
 
@@ -66,7 +66,7 @@ def create_update_sport():
                 re_msg = {"message": "ID not provided!"}
                 return jsonify(re_msg), 400
             sport.set_id(sport_id)
-            id_after_update = update_in_table_sport(db, sport_id, name, slug, active)
+            id_after_update = update_in_table_sport(db, sport_id, name, slug, active, sport.id)
             print(f"Entry was updated in the sport table with id {id_after_update}")
             re_msg = {"message": "Entry was updated with id" + str(id_after_update)}
 
@@ -213,6 +213,12 @@ def create_update_event():
         
         #if request is to add a new entry in the table using POST method
         if request.method == 'POST':
+            sport_filter_id = {'id': sport_id}
+            sport = get_data_sport(sport_filter_id)
+            if not sport:
+                return_message = {"message": "No active sport entry present for the ID given!"}
+                return jsonify(return_message), 400
+            
             last_id = insert_into_event(db, event.name, event.active, event.slug, event.type, event.sport_id, event.status, event.start_time, event.actual_start_time)
             print(f'Entry was created in event table with id{last_id}')
             re_msg = {"message": 'Entry was created in event table with id' + str(last_id)}
@@ -224,7 +230,7 @@ def create_update_event():
                 re_msg = {"message": "ID not provided!"}
                 return jsonify(re_msg), 400
             event.set_id(event_id)
-            id_after_update = update_in_table_sport(db, name, active, slug, e_type, sport_id, status, st_time, a_time, event_id)
+            id_after_update = update_in_table_sport(db, name, active, slug, e_type, sport_id, status, st_time, a_time, event.id)
             print(f"Entry was updated in the event table with id {id_after_update}")
             re_msg = {"message": "Entry was updated with id" + str(id_after_update)}
 
@@ -286,6 +292,150 @@ def event_entry_deavtivation():
         db = db_connection()
         #when all queries are done successfully return status 200
         ret_id = event_deactivation(id_event)
+        return jsonify({"message": "Event entry deactivated!"}), 200
+
+    except Exception as e:
+        print("Something went worng in event_entry_deactivation function!", e)
+        return jsonify({"message": "Something went wrong!"}), 400
+
+################################################# SELECTION #########################################################
+#function to create selection entry and updating existing entries
+#initiating method with POST and PUT
+@app.route('/selection', method = ['POST', 'PUT'])
+def create_update_selection():
+    try:
+        #get json data
+        req_data = request.get_json()
+        #creating an error message structure to differentiate if any fields are missing with a missing flag
+        error_msg = "Field is missing"
+        missing = False
+        #check if data recieved is not null
+        if req_data:
+            if 'Name' in req_data:
+                name = req_data['Name']
+            else:
+                missing = True
+                error_msg += ' ,Name '
+                name = ''
+
+            if 'event_id' in req_data:
+                event_id = req_data['event_id']
+            else:
+                missing = True
+                error_msg += ' ,event_id '
+                event_id = ''
+            
+            if 'Price' in req_data:
+                price = req_data['Price']
+            else:
+                missing = True
+                error_msg += ' ,Price '
+                price = 0
+
+            if 'Active' in req_data:
+                active = req_data['Active']
+            else:
+                missing = True
+                error_msg += ' ,Active '
+                active = ''
+            
+            if 'Outcome' in req_data:
+                outcome = req_data['Outcome']
+            else:
+                missing = True
+                error_msg += ' ,Outcome '
+                outcome = ''
+
+        else:
+            return_message = {"message": "No data to save in the selection table!"}
+            return jsonify(return_message), 400
+        
+        #if any field was missing return a message with status 400
+        if missing:
+            return_message = {"message": error_msg}
+            return jsonify(return_message), 400
+        
+        selection = Selection(name, event_id, price, active, outcome)
+        db = db_connection()
+        
+        #if request is to add a new entry in the table using POST method
+        if request.method == 'POST':
+            event_filter_id = {'id': event_id}
+            event = get_data_event(event_filter_id)
+            if not event:
+                return_message = {"message": "No active event entry was present for the ID given!"}
+                return jsonify(return_message), 400
+            
+            last_id = insert_into_selection(db, selection.name, selection.event_id, selection.price, selection.active, selection.outcome)
+            print(f'Entry was created in selection table with id{last_id}')
+            re_msg = {"message": 'Entry was created in selection table with id' + str(last_id)}
+        elif request.method == 'PUT':
+            #check if the id is there otherwise return the message
+            if 'id' in req_data:
+                selection_id = req_data['id']
+            else:
+                re_msg = {"message": "ID not provided!"}
+                return jsonify(re_msg), 400
+            selection.set_id(selection_id)
+            id_after_update = update_in_table_selection(db, name, event_id, price, active, outcome, selection.id)
+            print(f"Entry was updated in the selection table with id {id_after_update}")
+            re_msg = {"message": "Entry was updated with id" + str(id_after_update)}
+
+        #if the task were successfull then close database connection and return message to status 200
+        db.close()
+        return jsonify(re_msg), 200
+    except Exception as e:
+        print('Error occured while doing operations in selection table', e)
+        return jsonify({"message": "Something went wrong !"}), 400
+
+#function to retrieve data from selection table
+#initiating method for GET
+@app.route('/selection', method = ['GET'])
+def ret_data_selection():
+    try:
+        #createing a list to retrieve filtered data
+        s_list = []
+        #temp variable to get filters and converting the data into dictionary
+        req_filters = request.args.to_dict()
+
+        db = db_connection()
+        filt_rows = get_data_selection(req_filters)
+        if filt_rows:
+            for r in filt_rows:
+                s = {
+                    'id': r['id'],
+                    'name': r['Name'],
+                    'event_id': r['event_id'],
+                    'price': r['Price'],
+                    'active': r['Active'],
+                    'outcome': r['Outcome']
+                }
+                s_list.append(s)
+        #if all the data is retrieved clode database connection
+        db.close()
+        if s_list:
+            return jsonify(s_list)
+        else:
+            return jsonify({"message": "No Selection Available!"}), 200
+    except Exception as e:
+        print("Something went worng ret_data_selection funcitons: ", e)
+        return jsonify({"message": "Something went wrong!"}), 400
+
+#method to deactive a selection entry if all the selections are inactive
+@app.route('/selection_entry_deavtivation', method = ['GET'])
+def selection_entry_deavtivation():
+    try:
+        #converting the requested deactivation data into dictionary
+        req_deact = request.args.to_dict()
+        #if the given data is not empty and id is given for a sport entry
+        #if data is empty of id is not provided. return the message with status 400
+        if req_deact and 'id' in req_deact:
+            id_selection = req_deact['id']
+        else:
+            return jsonify({"message": "No id was given for the event entry! "}), 400
+        db = db_connection()
+        #when all queries are done successfully return status 200
+        ret_id = selection_deactivation(id_selection)
         return jsonify({"message": "Event entry deactivated!"}), 200
 
     except Exception as e:

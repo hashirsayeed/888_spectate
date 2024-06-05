@@ -1,7 +1,7 @@
 import mysql.connector
 from api.logger import logger
 import time
-from helper import make_filter_sport, make_filter_event
+from helper import make_filter_sport, make_filter_event, make_filter_selection  
 
 #function to create connecting to database
 def db_connection():
@@ -80,7 +80,7 @@ def sport_deactivation(db, sport_id):
 def insert_into_event(db, name, active, slug, e_type, sport_id, status, st_time, a_time):
     try:
         mycursor = db.cursor()
-        mycursor.execute("INSERT INTO event (id, name, active, slug, type, sport_id, status, start_time, actual_star_time) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (name, active, slug, e_type, sport_id, status, st_time, a_time))
+        mycursor.execute("INSERT INTO event (id, Name, Active, Slug, Type, sport_id, Status, start_time, actual_star_time) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (name, active, slug, e_type, sport_id, status, st_time, a_time))
         db.commit()
         return mycursor.lastrowid
     except Exception as e:
@@ -130,4 +130,60 @@ def event_deactivation(db, event_id):
     except Exception as e:
         db.close()
         print("Error occured while deactivating event entry!", e)
+        return None
+
+#function to insert a new selection entry
+def insert_into_selection(db, name, event_id, price, active, outcome):
+    try:
+        mycursor = db.cursor()
+        mycursor.execute("INSERT INTO selection (id, Name, event_id, Price, Active, Outcome) VALUES (%s, %s, %s, %s, %s)", (name, event_id, price, active, outcome))
+        db.commit()
+        return mycursor.lastrowid
+    except Exception as e:
+        mycursor.close()
+        print("Exception occured while inserting into table selection: ", e)
+        return None
+
+#function to update the values in event table
+def update_in_table_selection(db, name, event_id, price, active, outcome, id):
+    try:
+        mycursor = db.cursor()
+        mycursor.execute("UPDATE selection SET Name = %s, event_id = %s, Price = %s, Active = %s, Outcome = %s WHERE id = %s", (name, event_id, price, active, outcome, id))
+        db.commit()
+        return id
+    except Exception as e:
+        mycursor.close()
+        print("Exception occured while updating the record in selection table", e)
+        return None
+
+#function to retrive data with or without filters
+def get_data_selection(db, filters):
+    try:
+        #query for selections
+        query = "SELECT * FROM selection"
+        #filter query
+        f_query = ""
+        if filters:
+            f_query = make_filter_selection(filters)
+        query += f_query
+        print(f"final query: {query}")
+        mycursor = db.cursor()
+        mycursor.execute(query)
+        rows = mycursor.fetchall()
+        return rows
+    except Exception as e:
+        db.close()
+        print("Error occured while retrieving selections", e)
+        return None
+
+#function to deactive a selection entry
+def selection_deactivation(db, selection_id):
+    try:
+        mycursor = db.cursor()
+        mycursor.execute("UPDATE selection SET active = 0 WHERE id = %s", str(selection_id))
+        db.commit()
+        return selection_id
+    except Exception as e:
+        db.close()
+        print("Error occured while deactivating selection entry!", e)
         return None

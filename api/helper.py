@@ -116,3 +116,32 @@ def make_filter_event(filters):
     except Exception as e:
         print("Error occurred while making events filter:", e)
         return None
+
+def make_filter_selection(filters):
+    try:
+        selection_filter = " "
+        if filters:
+            if 'active' in filters:
+                selection_filter += " WHERE selection.Active IN " + filters['active']
+            else:
+                selection_filter += " WHERE selection.Active = 1"
+            if 'id' in filters:
+                selection_filter += " AND selection.ID =" + str(filters['id'])
+            if 'name' in filters:
+                selection_filter += " AND selection.Name LIKE '%" + filters['name'] + "%'"
+            if 'event_id' in filters:
+                selection_filter += " AND selection.event_id =" + filters['event_id']
+            if 'price' in filters:
+                selection_filter += " AND selection.Price =" + filters['price']
+            if 'min_price' in filters:
+                selection_filter += " AND selection.Price >=" + filters['min_price']
+            if 'max_price' in filters:
+                selection_filter += " AND selection.Price <=" + filters['min_price']
+            if 'outcome' in filters:
+                selection_filter += " AND selection.Outcome LIKE '%" + filters['outcome'] + "%'"
+        else:
+            selection_filter += " WHERE event.Active = 1"
+        return selection_filter
+    except Exception as e:
+        print("Error occurred while making selections filter:", e)
+        return None
