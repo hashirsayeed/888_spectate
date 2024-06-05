@@ -12,5 +12,5 @@ mycursor = db.cursor()
 # mycursor.execute("CREATE DATABASE test888database")
 
 #create a tables
-def create_tables(mycursor):
-    mycursor.execute("CREATE TABLE sport (Name VARCHAR(50), Slug VARCHAR(128) NULL, Active bool, ID int PRIMARY KEY AUTO_INCREMENT)")
+# def create_tables(mycursor):
+#     mycursor.execute("CREATE TABLE sport (Name VARCHAR(50), Slug VARCHAR(128) NULL, Active bool, ID int PRIMARY KEY AUTO_INCREMENT)")

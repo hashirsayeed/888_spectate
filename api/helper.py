@@ -18,15 +18,15 @@ def make_filter_sport(filters):
         sport_filter = " "
         if filters:
             if 'active' in filters:
-                sport_filter += " WHERE sport.Active IN " + filters['active']
+                sport_filter += " WHERE sport.Active IN " + filters['Active']
             else:
                 sport_filter += " WHERE sport.Active = 1"
             if 'id' in filters:
                 sport_filter += " AND sport.ID =" + str(filters['id'])
             if 'name' in filters:
-                sport_filter += " AND sport.Name LIKE '%" + filters['name'] + "%'"
+                sport_filter += " AND sport.Name LIKE '%" + filters['Name'] + "%'"
             if 'slug' in filters:
-                sport_filter += " AND sport.slug LIKE '%" + filters['slug'] + "%'"
+                sport_filter += " AND sport.slug LIKE '%" + filters['Slug'] + "%'"
             if 'min_event' in filters:
                 sport_filter += " AND (SELECT count(1) FROM event AS event WHERE event.Active = 1 AND event.Sport_id = sport.id) >= " + filters['min_event']
             if 'max_event' in filters:

@@ -15,16 +15,16 @@ class Sport(Converter):
         self.id = id
 
 class Event(Converter):
-    def __init__(self, name, active, slug, type, sport_id, status, start_time, actual_start_time):
+    def __init__(self, name, active, slug, type, status, start_time, actual_start_time, sport_id):
         self.id = None
         self.name = name
         self.active = active
         self.slug = slug
         self.type = type
-        self.sport_id = sport_id
         self.status = status
         self.start_time = start_time
         self.actual_start_time = actual_start_time
+        self.sport_id = sport_id
     def set_id(self, id):
         self.id = id
 

@@ -23,7 +23,7 @@ def db_connection():
 def insert_into_table_sport(db, name, slug, active):
     try:
         mycursor = db.cursor()
-        mycursor.execute("INSERT INTO sport (id, name, slug, active) VALUE (%s, %s, %s)", (name, slug, active))
+        mycursor.execute("INSERT INTO sport (name, slug, active) VALUE (%s, %s, %s)", (name, slug, active))
         db.commit()
         return mycursor.lastrowid
     
@@ -55,7 +55,7 @@ def get_data_sport(db, filters):
             f_query = make_filter_sport(filters)
         query += f_query
         print(f"final query: {query}")
-        mycursor = db.cursor()
+        mycursor = db.cursor(dictionary=True)
         mycursor.execute(query)
         rows = mycursor.fetchall()
         return rows
@@ -77,10 +77,10 @@ def sport_deactivation(db, sport_id):
         return None
 
 #function to insert into event table
-def insert_into_event(db, name, active, slug, e_type, sport_id, status, st_time, a_time):
+def insert_into_event(db, name, active, slug, e_type, status, st_time, a_time, sport_id):
     try:
         mycursor = db.cursor()
-        mycursor.execute("INSERT INTO event (id, Name, Active, Slug, Type, sport_id, Status, start_time, actual_star_time) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (name, active, slug, e_type, sport_id, status, st_time, a_time))
+        mycursor.execute("INSERT INTO event (Name, Active, Slug, Type, Status, start_time, actual_start_time, sport_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (name, active, slug, e_type, status, st_time, a_time, sport_id))
         db.commit()
         return mycursor.lastrowid
     except Exception as e:
@@ -92,7 +92,7 @@ def insert_into_event(db, name, active, slug, e_type, sport_id, status, st_time,
 def update_in_table_event(db, name, active, slug, e_type, sport_id, status, st_time, a_time, id):
     try:
         mycursor = db.cursor()
-        mycursor.execute("UPDATE event SET Name = %s, Active = %s, Slug = %s, Type = %s, Sport_id = %s, Status = %s, start_time = %s, actual_start_time = %s WHERE id = %s", (name, active, slug, e_type, sport_id, status, st_time, a_time, id))
+        mycursor.execute("UPDATE event SET Name = %s, Active = %s, Slug = %s, Type = %s, Status = %s, Sport_id = %s, start_time = %s, actual_start_time = %s WHERE id = %s", (name, active, slug, e_type, sport_id, status, st_time, a_time, id))
         db.commit()
         return id
     except Exception as e:
@@ -111,7 +111,7 @@ def get_data_event(db, filters):
             f_query = make_filter_event(filters)
         query += f_query
         print(f"final query: {query}")
-        mycursor = db.cursor()
+        mycursor = db.cursor(dictionary=True)
         mycursor.execute(query)
         rows = mycursor.fetchall()
         return rows
@@ -136,7 +136,7 @@ def event_deactivation(db, event_id):
 def insert_into_selection(db, name, event_id, price, active, outcome):
     try:
         mycursor = db.cursor()
-        mycursor.execute("INSERT INTO selection (id, Name, event_id, Price, Active, Outcome) VALUES (%s, %s, %s, %s, %s)", (name, event_id, price, active, outcome))
+        mycursor.execute("INSERT INTO selection (Name, event_id, Price, Active, Outcome) VALUES (%s, %s, %s, %s, %s)", (name, event_id, price, active, outcome))
         db.commit()
         return mycursor.lastrowid
     except Exception as e:
@@ -167,7 +167,7 @@ def get_data_selection(db, filters):
             f_query = make_filter_selection(filters)
         query += f_query
         print(f"final query: {query}")
-        mycursor = db.cursor()
+        mycursor = db.cursor(dictionary=True)
         mycursor.execute(query)
         rows = mycursor.fetchall()
         return rows
@@ -187,3 +187,4 @@ def selection_deactivation(db, selection_id):
         db.close()
         print("Error occured while deactivating selection entry!", e)
         return None
+
