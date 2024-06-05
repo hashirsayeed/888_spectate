@@ -1,7 +1,7 @@
 import mysql.connector
 from api.logger import logger
 import time
-from helper import make_filter_sport, make_filter_event, make_filter_selection  
+from api.helper import make_filter_sport, make_filter_event, make_filter_selection  
 
 #function to create connecting to database
 def db_connection():

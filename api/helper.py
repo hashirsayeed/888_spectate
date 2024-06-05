@@ -1,6 +1,7 @@
 from datetime import datetime
 import pytz
 
+
 def get_UTC_time(time, time_zone):
     try:
         time = datetime.strptime(time, '%Y-%m-%d %H:%M:%S')

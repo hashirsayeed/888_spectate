@@ -80,7 +80,7 @@ def create_update_sport():
 
 #function to retrieve data from sport table
 #initiating method for GET
-@app.route('/sport', method = ['GET'])
+@app.route('/sport', methods = ['GET'])
 def ret_data_sport():
     try:
         #createing a list to retrieve filtered data
@@ -109,7 +109,7 @@ def ret_data_sport():
         return jsonify({"message": "Something went wrong !"}), 400
 
 #method to deactive a sport entry if all the events are inactive
-@app.route('/sport_entry_deavtivation', method = ['GET'])
+@app.route('/sport_entry_deavtivation', methods = ['GET'])
 def sport_entry_deavtivation():
     try:
         #converting the requested deactivation data into dictionary
@@ -133,7 +133,7 @@ def sport_entry_deavtivation():
 ################################################# EVENT #########################################################
 #function to create event entry and updating existing entries
 #initiating method with POST and PUT
-@app.route('/event', method = ['POST', 'PUT'])
+@app.route('/event', methods = ['POST', 'PUT'])
 def create_update_event():
     try:
         #get json data
@@ -243,7 +243,7 @@ def create_update_event():
 
 #function to retrieve data from event table
 #initiating method for GET
-@app.route('/event', method = ['GET'])
+@app.route('/event', methods = ['GET'])
 def ret_data_event():
     try:
         #createing a list to retrieve filtered data
@@ -278,7 +278,7 @@ def ret_data_event():
         return jsonify({"message": "Something went wrong!"}), 400
 
 #method to deactive a event entry if all the events are inactive
-@app.route('/event_entry_deavtivation', method = ['GET'])
+@app.route('/event_entry_deavtivation', methods = ['GET'])
 def event_entry_deavtivation():
     try:
         #converting the requested deactivation data into dictionary
@@ -301,7 +301,7 @@ def event_entry_deavtivation():
 ################################################# SELECTION #########################################################
 #function to create selection entry and updating existing entries
 #initiating method with POST and PUT
-@app.route('/selection', method = ['POST', 'PUT'])
+@app.route('/selection', methods = ['POST', 'PUT'])
 def create_update_selection():
     try:
         #get json data
@@ -390,7 +390,7 @@ def create_update_selection():
 
 #function to retrieve data from selection table
 #initiating method for GET
-@app.route('/selection', method = ['GET'])
+@app.route('/selection', methods = ['GET'])
 def ret_data_selection():
     try:
         #createing a list to retrieve filtered data
@@ -422,7 +422,7 @@ def ret_data_selection():
         return jsonify({"message": "Something went wrong!"}), 400
 
 #method to deactive a selection entry if all the selections are inactive
-@app.route('/selection_entry_deavtivation', method = ['GET'])
+@app.route('/selection_entry_deavtivation', methods = ['GET'])
 def selection_entry_deavtivation():
     try:
         #converting the requested deactivation data into dictionary
@@ -442,5 +442,6 @@ def selection_entry_deavtivation():
         print("Something went worng in event_entry_deactivation function!", e)
         return jsonify({"message": "Something went wrong!"}), 400
 
-
+if __name__ == "__main__":
+    app.run(host = '0.0.0.0', debug = True)
             
