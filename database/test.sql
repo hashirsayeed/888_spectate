@@ -34,7 +34,3 @@ CREATE TABLE `test888database`.`selection` (
     REFERENCES `test888database`.`event` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
-
-
-
-how to inactive a column if every field is inactive in other table.?

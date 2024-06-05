@@ -1,7 +1,7 @@
 import mysql.connector
 from api.logger import logger
 import time
-from helper import make_filter_sport
+from helper import make_filter_sport, make_filter_event
 
 #function to create connecting to database
 def db_connection():
@@ -23,7 +23,7 @@ def db_connection():
 def insert_into_table_sport(db, name, slug, active):
     try:
         mycursor = db.cursor()
-        mycursor.execute("INSERT INTO sport (id, name, slug, active) VALUE (%s, %s)", (name, slug, active))
+        mycursor.execute("INSERT INTO sport (id, name, slug, active) VALUE (%s, %s, %s)", (name, slug, active))
         db.commit()
         return mycursor.lastrowid
     
@@ -36,12 +36,12 @@ def insert_into_table_sport(db, name, slug, active):
 def update_in_table_sport(db, id, name, slug, active):
     try:
         mycursor = db.cursor()
-        mycursor.execute("UPDATE sport SET name = %s, slug = %s, active = %s WHERE id = %s", (name, slug, active, id))
+        mycursor.execute("UPDATE sport SET Name = %s, Slug = %s, Active = %s WHERE id = %s", (name, slug, active, id))
         db.commit()
         return id
     except Exception as e:
         mycursor.close()
-        print("Exception occured while updating the record", e)
+        print("Exception occured while updating the record in sport table", e)
         return None
 
 #function to retrive data with or without filters
@@ -62,4 +62,72 @@ def get_data_sport(db, filters):
     except Exception as e:
         db.close()
         print("Error occured while retrieving sport", e)
+        return None
+
+#function to deactive a sport entry
+def sport_deactivation(db, sport_id):
+    try:
+        mycursor = db.cursor()
+        mycursor.execute("UPDATE sport SET active = 0 WHERE id = %s", str(sport_id))
+        db.commit()
+        return sport_id
+    except Exception as e:
+        db.close()
+        print("Error occured while deactivating sport entry!", e)
+        return None
+
+#function to insert into event table
+def insert_into_event(db, name, active, slug, e_type, sport_id, status, st_time, a_time):
+    try:
+        mycursor = db.cursor()
+        mycursor.execute("INSERT INTO event (id, name, active, slug, type, sport_id, status, start_time, actual_star_time) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (name, active, slug, e_type, sport_id, status, st_time, a_time))
+        db.commit()
+        return mycursor.lastrowid
+    except Exception as e:
+        mycursor.close()
+        print("Exception occured while inserting into table event: ", e)
+        return None
+
+#function to update the values in event table
+def update_in_table_event(db, name, active, slug, e_type, sport_id, status, st_time, a_time, id):
+    try:
+        mycursor = db.cursor()
+        mycursor.execute("UPDATE event SET Name = %s, Active = %s, Slug = %s, Type = %s, Sport_id = %s, Status = %s, start_time = %s, actual_start_time = %s WHERE id = %s", (name, active, slug, e_type, sport_id, status, st_time, a_time, id))
+        db.commit()
+        return id
+    except Exception as e:
+        mycursor.close()
+        print("Exception occured while updating the record in event table", e)
+        return None
+
+#function to retrive data with or without filters
+def get_data_event(db, filters):
+    try:
+        #query for selctions
+        query = "SELECT * FROM event"
+        #filter query
+        f_query = ""
+        if filters:
+            f_query = make_filter_event(filters)
+        query += f_query
+        print(f"final query: {query}")
+        mycursor = db.cursor()
+        mycursor.execute(query)
+        rows = mycursor.fetchall()
+        return rows
+    except Exception as e:
+        db.close()
+        print("Error occured while retrieving event", e)
+        return None
+
+#function to deactive a event entry
+def event_deactivation(db, event_id):
+    try:
+        mycursor = db.cursor()
+        mycursor.execute("UPDATE event SET active = 0 WHERE id = %s", str(event_id))
+        db.commit()
+        return event_id
+    except Exception as e:
+        db.close()
+        print("Error occured while deactivating event entry!", e)
         return None
