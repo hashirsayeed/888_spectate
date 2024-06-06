@@ -41,3 +41,14 @@ CREATE TABLE `test888database`.`selection` (
     REFERENCES `test888database`.`event` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+INSERT INTO `test888database`.`sport` (Name, Slug, Active) VALUES ('FOOTBALL', 'FOOTBALL', 1);
+INSERT INTO `test888database`.`sport` (Name, Slug, Active) VALUES ('BASKETBALL', 'BASKETBALL', 1);
+INSERT INTO `test888database`.`sport` (Name, Slug, Active) VALUES ('BASEBALL', 'BASEBALL', 1);
+INSERT INTO `test888database`.`sport` (Name, Slug, Active) VALUES ('HOCKEY', 'HOCKEY', 1);
+
+INSERT INTO `test888database`.`event` (Name, Active, Slug, Type, Status, start_time, actual_start_time, sport_id) VALUES ('FOOTBALL', 1,'FOOTBALL', 'INPLAY', 'PENDING', '2022-08-21 16:30:00', '2022-08-21 16:30:00', 1);
+INSERT INTO `test888database`.`event` (Name, Active, Slug, Type, Status, start_time, actual_start_time, sport_id) VALUES ('BASKETBALL', 1,'BASKETBALL', 'INPLAY', 'PENDING', '2022-08-21 18:30:00', '2022-08-21 18:30:00', 2);
+
+INSERT INTO `test888database`.`selection` (Name, Price, Active, Outcome, event_id) VALUES ('FOOTBALL', 2, 1, "Unsettled", 1);
+INSERT INTO `test888database`.`selection` (Name, Price, Active, Outcome, event_id) VALUES ('BASKETBALL', 2, 1, "Unsettled", 2);

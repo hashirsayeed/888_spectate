@@ -1,15 +1,30 @@
+version: "2"
 services:
   pythonapp:
     build: ./api/
     command: sh -c "sleep 10s; python -m api.app"
+    ports:
+      - "5000:5000"
+    links:
+      - database
     depends_on:
-      - mysql
+      - database
   
-  mysql:
-    build: ./database/
-    restart: always
+  database:
+    image: mysql:8.0.37
+    # build: ./database/
+    # restart: always
+    ports:
+      - "3307:3306"
+    # network_mode: 'host'
     environment:
-      MYSQL_DATABSE: 'test888spectate'
-      MYSQL_ROOT_PASSWORD: 'Hashirs@10'
+      MYSQL_DATABSE: test888spectate
+      # MYSQL_USER: root
+      # MYSQL_PASSWORD: Hashirs@10
+      MYSQL_ROOT_PASSWORD: Hashirs@10
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./data:/var/lib/mysql
+    
 
     

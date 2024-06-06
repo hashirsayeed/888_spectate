@@ -8,7 +8,7 @@ def db_connection():
     try:
         time.sleep(5)
         db = mysql.connector.connect(
-            host = "localhost",
+            host = "database",
             user = 'root',
             passwd = 'Hashirs@10',
             database = 'test888database'
