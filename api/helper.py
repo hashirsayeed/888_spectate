@@ -146,3 +146,4 @@ def make_filter_selection(filters):
     except Exception as e:
         print("Error occurred while making selections filter:", e)
         return None
+

@@ -119,7 +119,7 @@ def test_fail_sport_m_slug():
     mock_request_data = {
         "id": 1,
         "Name": "Football",
-        "Slug": "Football",
+        "Slug": "Football"
     }
 
     response = client.put(url, data=json.dumps(mock_request_data), content_type='application/json')
@@ -183,12 +183,12 @@ def test_success_event_post():
     url = '/event'
     mock_request_data = {
         "Name": "Football",
-        "Slug": "Football",
         "Active": 1,
+        "Slug": "Football",
         "Type": "Inplay",
-        "sport_id": 1,
         "Status": "Pending",
-        "start_time": "2022-08-21 16:30:00"
+        "start_time": "2022-08-21 16:30:00",
+        "sport_id": 1
     }
     response = client.post(url, data=json.dumps(mock_request_data), content_type = 'application/json')
     print(response)
@@ -204,79 +204,63 @@ def test_fail_event_post_m_data():
     assert response.status_code == 400
 
 #Testing inserting data into event table with no name
-def test_fail_event_post_name():
+def test_fail_event_post_m_name():
     client = app.test_client()
     url = '/event'
     mock_request_data = {
-        "Slug": "Football",
+        
         "Active": 1,
+        "Slug": "Football",
         "Type": "Inplay",
-        "sport_id": 1,
         "Status": "Pending",
-        "start_time": "2022-08-21 16:30:00"
+        "start_time": "2022-08-21 16:30:00",
+        "sport_id": 1
     }
     response = client.post(url, data=json.dumps(mock_request_data), content_type = 'application/json')
     print(response)
     assert response.status_code == 400
 
 #Testing inserting data into event table with no slug
-def test_fail_event_post_name():
+def test_fail_event_post_m_slug():
     client = app.test_client()
     url = '/event'
     mock_request_data = {
         "Name": "Football",
         "Active": 1,
         "Type": "Inplay",
-        "sport_id": 1,
         "Status": "Pending",
-        "start_time": "2022-08-21 16:30:00"
-    }
-    response = client.post(url, data=json.dumps(mock_request_data), content_type = 'application/json')
-    print(response)
-    assert response.status_code == 400
-
-#Testing inserting data into event table with wrong active
-def test_fail_event_post_name():
-    client = app.test_client()
-    url = '/event'
-    mock_request_data = {
-        "Name": "Football",
-        "Slug": "Football",
-        "Active": 3,
-        "Type": "Inplay",
-        "sport_id": 1,
-        "Status": "Pending",
-        "start_time": "2022-08-21 16:30:00"
+        "start_time": "2022-08-21 16:30:00",
+        "sport_id": 1
     }
     response = client.post(url, data=json.dumps(mock_request_data), content_type = 'application/json')
     print(response)
     assert response.status_code == 400
 
 #Testing inserting data into event table with wrong type
-def test_fail_event_post_name():
+def test_fail_event_post_w_type():
     client = app.test_client()
     url = '/event'
     mock_request_data = {
         "Name": "Football",
-        "Slug": "Football",
         "Active": 1,
+        "Slug": "Football",
         "Type": "WrongIP",
-        "sport_id": 1,
         "Status": "Pending",
-        "start_time": "2022-08-21 16:30:00"
+        "start_time": "2022-08-21 16:30:00",
+        "sport_id": 1
     }
     response = client.post(url, data=json.dumps(mock_request_data), content_type = 'application/json')
     print(response)
     assert response.status_code == 400
 
 #Testing inserting data into event table with no sport ID
-def test_fail_event_post_name():
+def test_fail_event_post_m_sport_ID():
     client = app.test_client()
     url = '/event'
     mock_request_data = {
         "Name": "Football",
-        "Slug": "Football",
         "Active": 1,
+        "Slug": "Football",
         "Type": "Inplay",
         "Status": "Pending",
         "start_time": "2022-08-21 16:30:00"
@@ -286,36 +270,36 @@ def test_fail_event_post_name():
     assert response.status_code == 400
 
 #Testing inserting data into event table with wrong status
-def test_fail_event_post_name():
+def test_fail_event_post_w_status():
     client = app.test_client()
     url = '/event'
     mock_request_data = {
         "Name": "Football",
-        "Slug": "Football",
         "Active": 1,
+        "Slug": "Football",
         "Type": "Inplay",
-        "sport_id": 1,
         "Status": "WrongST",
-        "start_time": "2022-08-21 16:30:00"
+        "start_time": "2022-08-21 16:30:00",
+        "sport_id": 1
     }
     response = client.post(url, data=json.dumps(mock_request_data), content_type = 'application/json')
     print(response)
     assert response.status_code == 400
 
 #Testing for updating an entry in event table
-def test_put_events_success():
+def test_put_event_success():
     client = app.test_client()
     url = '/event'
 
     mock_request_data = {
-        "id": 3,
+        "id": 1,
         "Name": "Football",
-        "Slug": "Football",
         "Active": 1,
+        "Slug": "Football",
         "Type": "Inplay",
         "Status": "Pending",
-        "scheduled_start": "2022-08-21 16:30:00",
-        "actual_start": "2022-08-21 16:30:00",
+        "start_time": "2022-08-21 16:30:00",
+        "actual_start_time": "2022-08-21 16:30:00",
         "sport_id": 6
     }
 
@@ -330,13 +314,12 @@ def test_put_events_fail():
 
     mock_request_data = {
         "Name": "Football",
-        "Slug": "Football",
         "Active": 1,
+        "Slug": "Football",
         "Type": "Inplay",
         "Status": "Pending",
-        "scheduled_start": "2022-08-21 16:30:00",
-        "actual_start": "2022-08-21 16:30:00",
-        "sport_id": 6
+        "start_time": "2022-08-21 16:30:00",
+        "actual_start_time": "2022-08-21 16:30:00",
     }
 
     response = client.put(url, data=json.dumps(mock_request_data), content_type='application/json')
@@ -346,7 +329,7 @@ def test_put_events_fail():
 #Testing for retrieving data from event
 def test_success_event_get():
     client = app.test_client()
-    url = '/events'
+    url = '/event'
     response = client.get(url)
     print(response)
     assert response.status_code == 200
@@ -354,7 +337,7 @@ def test_success_event_get():
 #Testing for retreiving data using ID
 def test_get_events_success_id():
     client = app.test_client()
-    url = '/events?id=1'
+    url = '/event?id=1'
     response = client.get(url)
     print(response)
     assert response.status_code == 200
@@ -362,7 +345,7 @@ def test_get_events_success_id():
 #Testing for retreiving data when ID is not present
 def test_get_events_success_m_id():
     client = app.test_client()
-    url = '/events?id=99'
+    url = '/event?id=99'
     response = client.get(url)
     print(response)
     assert response.status_code == 200
@@ -370,7 +353,7 @@ def test_get_events_success_m_id():
 #Testing for retreiving data using name
 def test_get_events_success_name():
     client = app.test_client()
-    url = '/events?name=Football'
+    url = '/event?Name=Football'
     response = client.get(url)
     print(response)
     assert response.status_code == 200
@@ -378,7 +361,7 @@ def test_get_events_success_name():
 #Testing for retrieving data using name and ID
 def test_get_events_success_name_id():
     client = app.test_client()
-    url = '/events?id=1&Name=Football'
+    url = '/event?id=1&Name=Football'
     response = client.get(url)
     print(response)
     assert response.status_code == 200
@@ -386,7 +369,7 @@ def test_get_events_success_name_id():
 #Testing for deactivating entry in event table
 def test_success_evnt_deactive():
     client = app.test_client()
-    url = '/vent_entry_deavtivation?id=1'
+    url = '/event_entry_deavtivation?id=1'
     response = client.get(url)
     print(response)
     assert response.status_code == 200
@@ -395,7 +378,7 @@ def test_success_evnt_deactive():
 #Testing for deactivating entry in event table failure
 def test_fail_evnt_deactive():
     client = app.test_client()
-    url = '/vent_entry_deavtivation'
+    url = '/event_entry_deavtivation'
     response = client.get(url)
     print(response)
     assert response.status_code == 400
@@ -445,7 +428,7 @@ def test_fail_selection_put_m_name():
     assert response.status_code == 400
 
 #Testing failure for adding entry to selection table with missing Price
-def test_fail_selection_put_m_name():
+def test_fail_selection_put_m_price():
     client = app.test_client()
     url = '/selection'
 
@@ -558,7 +541,7 @@ def test_fail_selection_put_m_event_ID():
     assert response.status_code == 400
 
 #Testing failure for adding entry to selection table with wrong event ID
-def test_fail_selection_put_m_event_ID():
+def test_fail_selection_put_w_event_ID():
     client = app.test_client()
     url = '/selection'
 
@@ -577,20 +560,197 @@ def test_fail_selection_put_m_event_ID():
 #Testing to update an entry in selection
 def test_seccess_selection_put():
     client = app.test_client()
-    url = '/selections'
+    url = '/selection'
 
     mock_request_data = {
         "id": 1,
-        "name": "Football",
-        "event_id": 1,
-        "price": "2.00",
-        "active": "FALSE",
-        "outcome": "Unsettled"
+        "Name": "Football",
+        "Price": "2.00",
+        "Active": 1,
+        "Outcome": "Unsettled",
+        "event_id": 1
     }
 
     response = client.put(url, data=json.dumps(mock_request_data), content_type='application/json')
     print(response)
     assert response.status_code == 200
+
+#Testing to update an entry in selection with missing name
+def test_seccess_selection_put_m_name():
+    client = app.test_client()
+    url = '/selection'
+
+    mock_request_data = {
+        "id": 1,
+        "Price": "2.00",
+        "Active": 1,
+        "Outcome": "Unsettled",
+        "event_id": 1
+    }
+
+    response = client.put(url, data=json.dumps(mock_request_data), content_type='application/json')
+    print(response)
+    assert response.status_code == 400
+
+#Testing to update an entry in selection with missing event_id
+def test_seccess_selection_put_m_eventID():
+    client = app.test_client()
+    url = '/selection'
+
+    mock_request_data = {
+        "id": 1,
+        "Name": "Football",
+        "Price": "2.00",
+        "Active": 1,
+        "Outcome": "Unsettled"
+    }
+
+    response = client.put(url, data=json.dumps(mock_request_data), content_type='application/json')
+    print(response)
+    assert response.status_code == 400
+
+#Testing to update an entry in selection with missing price
+def test_seccess_selection_put_m_price():
+    client = app.test_client()
+    url = '/selection'
+
+    mock_request_data = {
+        "id": 1,
+        "Name": "Football",
+        "Active": 1,
+        "Outcome": "Unsettled",
+        "event_id": 1
+    }
+
+    response = client.put(url, data=json.dumps(mock_request_data), content_type='application/json')
+    print(response)
+    assert response.status_code == 400
+
+#Testing to update an entry in selection with wring active
+def test_seccess_selection_put_w_active():
+    client = app.test_client()
+    url = '/selection'
+
+    mock_request_data = {
+        "id": 1,
+        "Name": "Football",
+        "Price": "2.00",
+        "Active": "FALSE",
+        "Outcome": "Unsettled",
+        "event_id": 1
+    }
+
+    response = client.put(url, data=json.dumps(mock_request_data), content_type='application/json')
+    print(response)
+    assert response.status_code == 400
+
+#Testing to update an entry in selection with wring outcome
+def test_seccess_selection_put_w_outcome():
+    client = app.test_client()
+    url = '/selection'
+
+    mock_request_data = {
+        "id": 1,
+        "Name": "Football",
+        "Price": "2.00",
+        "Active": 1,
+        "Outcome": "WrongOC",
+        "event_id": 1
+    }
+
+    response = client.put(url, data=json.dumps(mock_request_data), content_type='application/json')
+    print(response)
+    assert response.status_code == 400
+
+#Testing to update an entry in selection with wrong event_id
+def test_seccess_selection_put_w_eventID():
+    client = app.test_client()
+    url = '/selection'
+
+    mock_request_data = {
+        "id": 1,
+        "Name": "Football",
+        "Price": "2.00",
+        "Active": "FALSE",
+        "Outcome": "Unsettled",
+        "event_id": 99
+    }
+
+    response = client.put(url, data=json.dumps(mock_request_data), content_type='application/json')
+    print(response)
+    assert response.status_code == 400
+
+
+#Testing to update an entry in selection with no data
+def test_fail_selection_put_m_id_m_data():
+    client = app.test_client()
+    url = '/selection'
+
+    mock_request_data = {}
+
+    response = client.put(url, data=json.dumps(mock_request_data), content_type='application/json')
+    print(response)
+    assert response.status_code == 400
+
+#Testing to retrieve entries from selection table
+def test_success_selection_get():
+    client = app.test_client()
+    url = '/selection'
+    response = client.get(url)
+    print(response)
+    assert response.status_code == 200
+
+#Testing to retrieve entries from selection table using ID
+def test_success_selection_get_ID():
+    client = app.test_client()
+    url = '/selection?id=1'
+    response = client.get(url)
+    print(response)
+    assert response.status_code == 200
+
+#Testing to retrieve entries from selection table with ID not present in table
+def test_success_selection_get_n_ID():
+    client = app.test_client()
+    url = '/selection?id=99'
+    response = client.get(url)
+    print(response)
+    assert response.status_code == 200
+
+#Testing to retrieve entries from selection table using name
+def test_success_selection_get_name():
+    client = app.test_client()
+    url = '/selection?Name=Football'
+    response = client.get(url)
+    print(response)
+    assert response.status_code == 200
+
+
+#Testing to retrieve entries from selection table using name and ID
+def test_success_selection_get_name_ID():
+    client = app.test_client()
+    url = '/selection?Name=Football&id=1'
+    response = client.get(url)
+    print(response)
+    assert response.status_code == 200
+
+#Testing for deactivation an entry in selection table
+def test_success_deactivate_selection():
+    client = app.test_client()
+    url = '/selection_entry_deavtivation?id=1'
+    response = client.get(url)
+    print(response)
+    assert response.status_code == 200
+
+
+#Testing for fail of deactivation an entry in selection table
+def test_fail_deactivate_selection():
+    client = app.test_client()
+    url = '/selection_entry_deavtivation'
+    response = client.get(url)
+    print(response)
+    assert response.status_code == 400
+
+
 
 
 

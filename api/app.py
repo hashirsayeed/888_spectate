@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from api.database import db_connection, insert_into_table_sport, update_in_table_sport, get_data_sport, sport_deactivation, insert_into_event, get_data_event, event_deactivation, insert_into_selection, update_in_table_selection, get_data_selection, selection_deactivation
+from api.database import db_connection, insert_into_table_sport, update_in_table_sport, get_data_sport, sport_deactivation, insert_into_event, get_data_event, update_in_table_event, event_deactivation, insert_into_selection, update_in_table_selection, get_data_selection, selection_deactivation
 from datetime import datetime
 from api.helper_class import Sport, Event, Selection
 
@@ -36,6 +36,9 @@ def create_update_sport():
             
             if 'Active' in req_data:
                 active = req_data['Active']
+                if int(active) > 1:
+                    return_message = {"message": "Active Field should be either 0 or 1"}
+                    return jsonify(return_message), 400
             else:
                 missing = True
                 error_msg += ' ,Active '
@@ -152,6 +155,9 @@ def create_update_event():
 
             if 'Active' in req_data:
                 active = req_data['Active']
+                if int(active) > 1:
+                    return_message = {"message": "Active Field should be either 0 or 1"}
+                    return jsonify(return_message), 400
             else:
                 missing = True
                 error_msg += ' ,Active '
@@ -166,6 +172,10 @@ def create_update_event():
             
             if 'Type' in req_data:
                 e_type = req_data['Type']
+                temp = ['Preplay', 'Inplay']
+                if e_type not in temp:
+                    return_message = {"message": "Type Field should be either Preplay or Inplay"}
+                    return jsonify(return_message), 400
             else:
                 missing = True
                 error_msg += ' ,Type '
@@ -180,6 +190,10 @@ def create_update_event():
 
             if 'Status' in req_data:
                 status = req_data['Status']
+                temp = ['Pending', 'Started', 'Ended', 'Cancelled']
+                if status not in temp:
+                    return_message = {"message": "Status Field should be Pending, Started, Ended or Cancelled"}
+                    return jsonify(return_message), 400
             else:
                 missing = True
                 error_msg += ' ,Status '
@@ -231,7 +245,7 @@ def create_update_event():
                 re_msg = {"message": "ID not provided!"}
                 return jsonify(re_msg), 400
             event.set_id(event_id)
-            id_after_update = update_in_table_sport(db, name, active, slug, e_type, sport_id, status, st_time, a_time, event.id)
+            id_after_update = update_in_table_event(db, name, active, slug, e_type, sport_id, status, st_time, a_time, event.id)
             print(f"Entry was updated in the event table with id {id_after_update}")
             re_msg = {"message": "Entry was updated with id" + str(id_after_update)}
 
@@ -257,12 +271,12 @@ def ret_data_event():
         if filt_rows:
             for r in filt_rows:
                 e = {
-                    'id': r['id'],
+                    'id': r['ID'],
                     'name': r['Name'],
                     'slug': r['Slug'],
                     'active': r['Active'],
                     'type': r['Type'],
-                    'sport_id': r['Sport_id'],
+                    'sport_id': r['sport_id'],
                     'status': r['Status'],
                     'start_time': r['start_time'],
                     'actual_start_time': r['actual_start_time']
@@ -335,6 +349,10 @@ def create_update_selection():
 
             if 'Active' in req_data:
                 active = req_data['Active']
+                active = req_data['Active']
+                if int(active) > 1:
+                    return_message = {"message": "Active Field should be either 0 or 1"}
+                    return jsonify(return_message), 400
             else:
                 missing = True
                 error_msg += ' ,Active '
@@ -342,6 +360,10 @@ def create_update_selection():
             
             if 'Outcome' in req_data:
                 outcome = req_data['Outcome']
+                temp = ['Unsettled', 'Void', 'Loose', 'Win']
+                if outcome not in temp:
+                    return_message = {"message": "Outcome Field should be Unsettled, Void, Loose or Win"}
+                    return jsonify(return_message), 400
             else:
                 missing = True
                 error_msg += ' ,Outcome '
@@ -404,7 +426,7 @@ def ret_data_selection():
         if filt_rows:
             for r in filt_rows:
                 s = {
-                    'id': r['id'],
+                    'id': r['ID'],
                     'name': r['Name'],
                     'event_id': r['event_id'],
                     'price': r['Price'],
@@ -444,5 +466,5 @@ def selection_entry_deavtivation():
         return jsonify({"message": "Something went wrong!"}), 400
 
 if __name__ == "__main__":
-    app.run(debug = True)
+    app.run(host="0.0.0.0", port=int("3000"), debug = True)
             

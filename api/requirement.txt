@@ -1,0 +1,4 @@
+flask
+pytest
+pytz
+mysql-connector-python
